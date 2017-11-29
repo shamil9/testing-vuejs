@@ -1,20 +1,26 @@
 import Question from '../src/components/Question.vue';
 import { mount } from 'vue-test-utils';
 import expect from 'expect';
+import moxios from 'moxios';
 
 describe('Question', () => {
     var wrapper;
-    beforeEach(
-        () =>
-            (wrapper = mount(Question, {
-                propsData: {
-                    question: {
-                        title: 'The title',
-                        body: 'The body'
-                    }
+    beforeEach(() => {
+        moxios.install();
+
+        wrapper = mount(Question, {
+            propsData: {
+                question: {
+                    title: 'The title',
+                    body: 'The body'
                 }
-            }))
-    );
+            }
+        });
+    });
+
+    afterEach('Question', () => {
+        moxios.uninstall();
+    });
 
     it('contains the body and the title', () => {
         expect(wrapper.html()).toContain('The title');
@@ -39,7 +45,7 @@ describe('Question', () => {
         expect(wrapper.contains('button#edit')).toBe(false);
     });
 
-    it('the values should be updated after editing', () => {
+    it.only('the values should be updated after editing', done => {
         wrapper.find('#edit').trigger('click');
 
         wrapper.find('input[name=title]').element.value = 'New title';
@@ -48,10 +54,21 @@ describe('Question', () => {
         wrapper.find('textarea[name=body]').element.value = 'New body';
         wrapper.find('textarea[name=body]').trigger('input');
 
+        moxios.stubRequest('/question/1', {
+            response: {
+                body: 'New body',
+                title: 'New title'
+            }
+        });
+
         wrapper.find('#save').trigger('click');
 
-        expect(wrapper.html()).toContain('New title');
-        expect(wrapper.html()).toContain('New body');
+        moxios.wait(() => {
+            expect(wrapper.html()).toContain('New title');
+            expect(wrapper.html()).toContain('New body');
+
+            done();
+        });
     });
 
     it('can exit editing mode', () => {

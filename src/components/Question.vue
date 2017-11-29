@@ -17,8 +17,11 @@
     </div>
 </template>
 <script>
+    import axios from 'axios'
+
     export default {
         props: ['question'],
+
         data() {
             return {
                 title: this.question.title,
@@ -26,9 +29,11 @@
                 isEditing: false
             }
         },
+
         methods: {
             save() {
-                this.isEditing = !this.isEditing
+                axios.post('/question/1', {title: this.title, body: this.body})
+                    .then(response => this.isEditing = !this.isEditing)
             }
         }
     }

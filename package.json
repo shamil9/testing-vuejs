@@ -4,10 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test":
-      "mocha-webpack --webpack-config webpack.config.js --require \"test/setup.js\" \"test/*.spec.js\"",
-    "watch":
-      "mocha-webpack --webpack-config webpack.config.js --watch --require \"test/setup.js\" \"test/*.spec.js\""
+    "test": "mocha-webpack --webpack-config webpack.config.js --require \"test/setup.js\" \"test/*.spec.js\"",
+    "watch": "mocha-webpack --webpack-config webpack.config.js --watch --require \"test/setup.js\" \"test/*.spec.js\""
   },
   "keywords": [],
   "author": "",
@@ -24,6 +22,8 @@
     "webpack": "^3.7.1"
   },
   "dependencies": {
+    "axios": "^0.17.1",
+    "moxios": "^0.4.0",
     "vue": "^2.5.0"
   }
 }
